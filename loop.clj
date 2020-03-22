@@ -5,7 +5,7 @@
     (println "Goodbye!")
   (recur (inc iteration) ) ) ) 
 
-;factorial via loop
+;; factorial via loop
 
 (loop [fact (rand-int 6) accumulator 1]
   (if (zero? fact)

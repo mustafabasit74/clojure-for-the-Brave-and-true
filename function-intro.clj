@@ -7,7 +7,7 @@
 (foo "Basit" )
 
 
-;get doc string
+;; get doc string
 (doc foo)
 (doc map)
 (doc hash-map)
@@ -15,7 +15,7 @@
 (doc *)
 
 
-;function arity	
+;; function arity	
 (defn no-params 
  "0 arity function"
  []

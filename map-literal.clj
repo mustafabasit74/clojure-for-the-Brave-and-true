@@ -65,18 +65,18 @@
 (get-in {:a 1 :b { :c 3 :d 4 } :e 5} [:b ]   "no data found") 
 
 
-;map as a function and key as argument
+;; map as a function and key as argument
 ({:a 1 :b 2 :c 3 }  :c )
 
 
-;key as function and map as its argument
+;; key as function and map as its argument
 (:c {:a 1 :b 2 :c 3 } )
 
-;keywords can be used as a functions that look up the coressponding value in the data structure
+;; keywords can be used as a functions that look up the coressponding value in the data structure
 (:first-name {:first-name "Mustafa" :last-name "Basit" })
 
-;***** words of wisdom ****
-;Using a keyword as a function is pleasantly succinct, and Real Clojurists
-;do it all the time. You should do it too!
+;; ***** words of wisdom ****
+;; Using a keyword as a function is pleasantly succinct, and Real Clojurists
+;; do it all the time. You should do it too!
 
 

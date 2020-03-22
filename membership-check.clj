@@ -8,13 +8,13 @@
 (:c #{:a :b})
 (#{:a :b} :c)
 
-;using get to test whether a set contains nil will always return nil, which is confusing
+;; using get to test whether a set contains nil will always return nil, which is confusing
 (contains?  #{:a nil } nil )
 (get #{:a nil } nil )
 
 
-;*************************
+;; *************************
 (contains? {nil "0" } nil )
 
-;*************************
+;; *************************
 (get {nil "0" } nil )

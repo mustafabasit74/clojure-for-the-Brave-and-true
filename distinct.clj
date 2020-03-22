@@ -4,10 +4,10 @@
 (distinct [nil nil])
 
 
-;square
+;; square
 (map #(* % %) (distinct [1 2 2 3 3 ]))
 
-;sum of distinct elements
+;; sum of distinct elements
 (reduce #(+ %1 %2)  0 (distinct [1 2 3 2]) )
 
 

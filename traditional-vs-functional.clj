@@ -1,6 +1,6 @@
-;***Tradional approach & Mutability
+;; ***Tradional approach & Mutability
 
-;(def severity :mild )
+;; (def severity :mild )
 (def severity :something-else)
 (def error-message "OH GOD! IT'S A DISASTER! WE ARE ")
 (if (= severity :mild) 
@@ -14,7 +14,7 @@
 
 
 
-;***functioanl approach & Immutablity
+;; ***functioanl approach & Immutablity
 
 (defn error-message
  [severity] 
@@ -24,5 +24,5 @@
  	  "DOOOOOMEED!" ) ) )	
 
 (error-message :mild)
-;(error-message :something-else)
+;; (error-message :something-else)
 

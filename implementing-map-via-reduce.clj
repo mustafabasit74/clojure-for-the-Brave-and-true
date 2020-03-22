@@ -3,10 +3,10 @@
 
 
 (map str ["a" "b" "c"] ["A" "B" "C"])
-;(reduce #() [] .....) - pending
+;; (reduce #() [] .....) - pending
 
 (map + [1 2 3] [1 2 3])
-;(reduce #() [] .......) -pending 
+;; (reduce #() [] .......) -pending 
 
 (def geeks [{:name "Basit" :intrest "Clojure":age 24}
             {:name "Zakir" :intrest "Python" :age 29}

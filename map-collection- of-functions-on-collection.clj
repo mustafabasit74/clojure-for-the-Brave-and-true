@@ -1,9 +1,9 @@
-;collections of functions be like [+ - inc dec], '(first second last)....
+;; collections of functions be like [+ - inc dec], '(first second last)....
 
-(def sum #(reduce + %));
+(def sum #(reduce + %));; 
 (def avg #(/ (sum %) (count %)))
 
-;stats - short for statistics
+;; stats - short for statistics
 (defn stats
   [numbers]
   (map #(% numbers) [sum count avg] ))

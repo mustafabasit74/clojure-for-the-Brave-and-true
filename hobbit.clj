@@ -35,14 +35,14 @@
                      (into final-body-parts 
                         (set [part (matching-part part)])))))))
                   
-;(symmetrize-body-parts asym-hobbit-body-parts )
+;; (symmetrize-body-parts asym-hobbit-body-parts )
 
-;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
-;The pattern of process each element in a sequence and build a result is 
-;so common that there’s a built-in function for it called reduce
+;; The pattern of process each element in a sequence and build a result is 
+;; so common that there’s a built-in function for it called reduce
 
-;Reduce abstracts the task “process a collection and build a result”
+;; Reduce abstracts the task “process a collection and build a result”
 
 (defn better-symmetrize-body-parts
   [asym-body-parts]
@@ -52,28 +52,28 @@
           []
           asym-body-parts))
 
-;(better-symmetrize-body-parts asym-hobbit-body-parts )
+;; (better-symmetrize-body-parts asym-hobbit-body-parts )
 
 
-;------------------------------------------------------------
-;spider-expander multiply eyes and legs
+;; ------------------------------------------------------------
+;; spider-expander multiply eyes and legs
 
-;pending, do it as soon as possible
-;------------------------------------------------------
-;Hobbit Violence
+;; pending, do it as soon as possible
+;; ------------------------------------------------------
+;; Hobbit Violence
 (defn hit 
   [asym-body-parts]
   (let [sym-parts (better-symmetrize-body-parts asym-body-parts)
         body-part-size-sum (reduce  + (map :size sym-parts) )
         target (rand body-part-size-sum)]
-;we can't use reduce below to process the collection and bulid result, because we don't have to
-;process all the elements of collection. we have to left the collection processing in mid way when (> accumulated-size target)        
+;; we can't use reduce below to process the collection and bulid result, because we don't have to
+;; process all the elements of collection. we have to left the collection processing in mid way when (> accumulated-size target)        
         (loop [[part & reamining] sym-parts
                 accumulated-size (:size part)]               
               (if ( > accumulated-size target)
                 part 
                 (recur reamining (+ accumulated-size (:size (first reamining)))) ) ) ) )
                 
-;(hit asym-hobbit-body-parts)
+;; (hit asym-hobbit-body-parts)
 
       

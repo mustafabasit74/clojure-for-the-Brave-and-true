@@ -1,8 +1,10 @@
-;pure function 
-;It's return value is the same for the same arguments
-
-;This function only relies on variable explicitly passed to it, and does not mutate any 
-;external state or the argument passed to it
+;; pure function 
+;; It's return value is the same for the same arguments
+;; pure functions cannot access anything other than what they are passed
+;; An expression is said to be pure if its evaluation lacks side-effects
+ 
+;; This function only relies on variable explicitly passed to it, and does not mutate any 
+;; external state or the argument passed to it
 
 (defn calculate-area
   [radius]
@@ -13,7 +15,7 @@
 (calculate-area 215)
 
 
-;impure function 
+;; impure function 
 (defn foo 
   [num]
   (+ num (rand-int 50))) 
@@ -28,14 +30,14 @@
 (rand-int 10)
 
 
-;pure fucntion 
-;don't modify argument being passed to them
-;It's evaluation has no side effects
-;never alter state/ does not modify external variable
+;; pure fucntion 
+;; don't modify argument being passed to them
+;; It's evaluation has no side effects
+;; never alter state/ does not modify external variable
 
 
-;pure function 
-;no use of global variables 
+;; pure function 
+;; no use of global variables 
 
 (defn pure-foo 
   [x y]
@@ -44,7 +46,7 @@
 
 (pure-foo 4 5)
 
-;impure function 
+;; impure function 
 (def mult 2)
 
 (defn impure-foo
@@ -53,7 +55,7 @@
 
 (impure-foo 4 5)
 
-;impure fucntion 
+;; impure fucntion 
 (def x 100)
 
 (defn impure-foo
@@ -62,8 +64,8 @@
 
 (impure-foo )
 
-;pure function 
-;takes in a specific argument and returns a determinstic value
+;; pure function 
+;; takes in a specific argument and returns a determinstic value
 
 (defn increment-numbers
   [number-collection]
@@ -72,8 +74,8 @@
 (increment-numbers '(1 2 3 4 5))
 
 
-;impure function 
-;uses global value rather than the argument so the result is inderminstic
+;; impure function 
+;; uses global value rather than the argument so the result is inderminstic
 
 (def global-value '(44 93 11 89 10) )
 

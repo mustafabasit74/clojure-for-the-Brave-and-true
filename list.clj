@@ -6,7 +6,7 @@
 (conj '(1 2 3 4 ) 5 )
 
 
-;it’s good to know that using nth to retrieve an element from a list
-;is slower than using get to retrieve an element from a vector.
+;; it’s good to know that using nth to retrieve an element from a list
+;; is slower than using get to retrieve an element from a vector.
 
 

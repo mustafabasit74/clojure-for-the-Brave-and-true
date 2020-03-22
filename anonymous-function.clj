@@ -28,28 +28,28 @@
 (map #(str "Hi, " %)
      ["Syed Nasir" "Eshaan" "Zahid" "Usmaan"] )
 
-;This strange-looking style of writing anonymous functions is made 
-;possible by a feature called reader macros.
+;; This strange-looking style of writing anonymous functions is made 
+;; possible by a feature called reader macros.
 
 
 (#(str "I like " %) "grapes")
 
 (#(str "I like " %1 " and " %2 ) "grapes" "orange")
 
-;% is equivalent to %1
+;; % is equivalent to %1
 (#(str "I like " %1 " and " % ) "grapes" ) 
 
-;************************
-;(#(str "I like " %1 " and " %1 ) "grapes" "orange" )
-;Execution error (ArityException)
-;Wrong number of args (2) passed to:
+;; ************************
+;; (#(str "I like " %1 " and " %1 ) "grapes" "orange" )
+;; Execution error (ArityException)
+;; Wrong number of args (2) passed to:
 
 
-;Identity returns the argument it’s given without altering it. 
+;; Identity returns the argument it’s given without altering it. 
 (identity 1)
 (identity "Basit")
 
-;(identity "Basit" "Danish")
+;; (identity "Basit" "Danish")
 
 (#(identity %&)  1 "Basit" "Dahish" :something)
 

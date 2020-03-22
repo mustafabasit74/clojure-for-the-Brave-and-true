@@ -1,4 +1,4 @@
-;linear recursive process - chain of deferred operations
+;; linear recursive process - chain of deferred operations
 (defn fact
   [num]
   (if (= num 1)
@@ -7,7 +7,7 @@
 
 (fact 20)
 
-;linear iterative process - Efficient than above one
+;; linear iterative process - Efficient than above one
 (defn fact-iter
   [ num accum ]
     (if (= num 0)

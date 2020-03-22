@@ -4,10 +4,10 @@
   
 (my-first ["pendrive" "mouse" "keyboard" "speaker"] )
 
-;Make my life easier by taking apart the argument’s structure for me and
-;associating meaningful names with different parts of the argument!
+;; Make my life easier by taking apart the argument’s structure for me and
+;; associating meaningful names with different parts of the argument!
 
-;destructuring  + rest param
+;; destructuring  + rest param
 
 (defn chooser
   [[first-choice second-choice & unimportant-choices]]
@@ -19,9 +19,9 @@
                                         
 (chooser ["phone" "powerbank" "laptop" "speaker" "pendrive" "harddisk" ])
 
-;you can also destructure maps. In the same way that you tell Clojure
-;to destructure a vector or list by providing a vector as a parameter, you
-;destructure maps by providing a map as a parameter:
+;; you can also destructure maps. In the same way that you tell Clojure
+;; to destructure a vector or list by providing a vector as a parameter, you
+;; destructure maps by providing a map as a parameter:
 
 (defn announce-treasure-location
   [{lat :lat lng :lng}]
@@ -32,10 +32,10 @@
 
 
 
-;We often want to just break keywords out of a map, so there’s a shorter
-;syntax for that
-;**********************************
-;still confusion, clear
+;; We often want to just break keywords out of a map, so there’s a shorter
+;; syntax for that
+;; **********************************
+;; still confusion, clear
 
 (defn announce-treasure-location
   [{:keys [lat lng]}]
@@ -44,8 +44,8 @@
 
 (announce-treasure-location {:lat 201.3902 :lng 137.912 } )
 
-;In general, you can think of destructuring as instructing Clojure on
-;how to associate names with values in a list, map, set, or vector. Now, on to
-;the part of the function that actually does something: the function body!
+;; In general, you can think of destructuring as instructing Clojure on
+;; how to associate names with values in a list, map, set, or vector. Now, on to
+;; the part of the function that actually does something: the function body!
 
 
