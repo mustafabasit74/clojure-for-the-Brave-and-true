@@ -1,4 +1,5 @@
-;cons - short for construct
+;; cons - short for construct
+;; Lisp programmers call it consing when they use the cons function
 (cons 1 '(2 3 4))
 (cons 1 [2 3 4])
 
@@ -6,7 +7,7 @@
 (cons [1 2 3] [4 5 6])
 (cons [1 2 ] '(4 5 6))
 
-;converts a map to vector
+;; converts a map to vector
 (cons {:a 1 :b 2 } {:c 3})
 ;; => ({:a 1, :b 2} [:c 3])
 
@@ -26,7 +27,7 @@
 
 
 ;; "cons" does not realize second parameter, 
-;;    opening the world for recursive functions that create lazy sequences
+;; opening the world for recursive functions that create lazy sequences
 
 ;; still confusion, see on clojure docs
 

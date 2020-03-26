@@ -39,8 +39,6 @@
 (positive-numbers)
 (take 4 (positive-numbers))
 
-
-;; confusion all around ---- ***
 ;; "cons" does not realize second parameter,
 ;; opening the world for recursive functions that create lazy sequences
 
@@ -54,6 +52,9 @@
 
 (take 10 (even-numbers))
 ;; => (0 2 4 6 8)
+
+;; In even-numbers, you’re consing to a lazy list, which includes a recipe (a
+;; function) for the next element (as opposed to consing to a fully realized list).
 
 ;; fib series
 
