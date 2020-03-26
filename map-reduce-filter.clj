@@ -16,6 +16,8 @@
 (map str ["a" "b" "c"] ["A" "B" ])
 (map str ["a" "b" "c"] ["A" "B" "C"] [])
 
+(map first [[1 2 3] [4 5 6] [7 8 9]])
+
 
 (def my-backpack [{:item "Books" :weight 1}
                   {:item "Laptop" :weight 2.7}
