@@ -1,8 +1,10 @@
 ;; (apply F [1 2 3 4 5]) translates to (F 1 2 3 4 5)
 ;; (map F [1 2 3 4 5])   translates to [(F 1) (F 2) (F 3) (F 4) (F 5)]
 
-
 ;; Apply - only once function will be called 
+
+;; Two of Clojure’s functions, apply and partial, might seem especially
+;; weird because they both accept and return functions.
 
 ;; ***
 ;; apply breaks a seqable data structure into pieces so it can be passed to a function that
