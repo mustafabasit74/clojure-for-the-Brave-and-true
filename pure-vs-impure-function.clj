@@ -6,6 +6,8 @@
 ;; This function only relies on variable explicitly passed to it, and does not mutate any 
 ;; external state or the argument passed to it
 
+;; Easy to debug  
+
 (defn calculate-area
   [radius]
   (* 3.14 (* radius radius)) )

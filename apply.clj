@@ -26,6 +26,4 @@
 (map first [[1 4 9] [2 9 4] [0 17 3]])
 
 
-
-
-
+;; my-apply pending

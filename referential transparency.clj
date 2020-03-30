@@ -40,7 +40,21 @@
                        ;; here (def result (sum 2 5 ))  != (def result 7)
                        ;; that means we can't optimize a referentially opaque code, we have to run it first (see lazy evaluation also) 
 
+
+;; ---^^^ youtube/ Eric Normand 
+
 ;; ***
 ;; “Why do they call it: Referentially transparent?”
 ;; http://www.nobugs.org/blog/archives/2008/11/12/why-do-they-call-it-referentially-transparent/
 
+
+
+;; It always returns the same result if given the same arguments. This is
+;; called referential transparency
+
+;; When using a referentially transparent function, you never have to
+;; consider what possible external conditions could affect the return value of
+;; the function. This is especially important if your function is used multiple
+;; places or if it’s nested deeply in a chain of function calls. In both cases, you
+;; can rest easy knowing that changes to external conditions won’t cause your
+;; code to break

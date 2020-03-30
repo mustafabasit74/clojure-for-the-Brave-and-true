@@ -32,3 +32,5 @@
 ;; tail-recursive-optimization works in clojure." This suggests that tail call optimisation 
 ;; is not available in the JVM, otherwise loop-recur would not be needed
 
+;; Clojure doesn’t provide tail call
+;; optimization, a topic
