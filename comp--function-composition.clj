@@ -50,6 +50,37 @@
 ;; => 9
 
 
-;; --------------------- my-comp - pending
+(defn two-comp
+  [f1 f2]
+  (fn [& args]
+      (f1 (apply f2 args))) )
 
- 
+((two-comp inc +) 2 4)
+;; => 7
+
+((comp inc + ) 2 4)
+;; => 7
+
+;; -----------
+(defn my-comp
+  [& funs]
+  (fn [& args]
+    (loop [remaining-functions (butlast funs)
+           res (apply (last funs)  args)]
+          (if (empty? remaining-functions)
+               res
+               (recur (butlast remaining-functions) ((last remaining-functions) res))))))
+
+
+((my-comp - identity int dec inc +)  2 3 1)
+;;; => 6
+((comp - identity int dec inc +)  2 3 1)
+;; => -6
+
+
+;; via reduce/without loop - pending
+
+(defn my-comp
+  [& funs]
+  (fn [& args]
+   ..
