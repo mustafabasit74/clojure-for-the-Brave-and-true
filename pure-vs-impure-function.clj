@@ -8,6 +8,9 @@
 
 ;; Easy to debug  
 
+;; When a function performs any other “action”, apart from calculating its return value, the function is impure.
+;; It follows that a function which calls an impure function is impure as well. Impurity is contagious.
+
 (defn calculate-area
   [radius]
   (* 3.14 (* radius radius)) )
@@ -87,3 +90,21 @@
   
 (impure-increment-numbers '(1 2 3 4 5))
 
+
+;; https://www.sitepoint.com/functional-programming-pure-functions/
+
+;; Pure functions can always be parallelized. Distribute the input values over a number of threads, and collect the results.
+
+;; Memoization
+;; Because pure functions are referentially transparent, we only need to compute their output once for given inputs.
+;; Caching and reusing the result of a computation is called memoization, and can only be done safely with pure functions.
+
+;; Laziness
+;; A variation on the same theme. We only ever need to compute the result of a pure function once,
+;; but what if we can avoid the computation entirely? Invoking a pure function means you specify a dependency:
+;; this output value depends on these input values. But what if you never use the output value? Because the function 
+;; can not cause side effects, it does not matter if it is called or not. Hence a smart system can be lazy and optimize 
+;; the call away.
+;; Some languages, like Haskell, are completely built on lazy evaluation. Only values that are needed to
+;; achieve side effects are computed, the rest is ignored. Ruby’s evaluation strategy is called strict evaluation,
+;; each expression is completely evaluated before its result can be used in another expression
