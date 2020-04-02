@@ -42,3 +42,7 @@
       price 200]
      price )
 
+
+(let [x 10
+      _ (println "x : " x)]
+      x )

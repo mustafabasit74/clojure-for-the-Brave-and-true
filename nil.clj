@@ -18,3 +18,7 @@
 (nil? (if nil "hello") ) 
 
 (= true (nil? (if nil "hello") ) ) 
+
+(+ 2 nil)
+;; => Execution error (NullPointerException) at user/eval277 (REPL:1) .
+;; => null
