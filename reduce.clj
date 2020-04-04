@@ -11,9 +11,9 @@
 ;; Reduce can be used to transform a map’s values, producing a new map with 
 ;; the same keys but with updated values
 
-(def geeks [{:name "Basit" :intrest "Clojure":age 24}
-            {:name "Zakir" :intrest "Python" :age 29}
-            {:name "Nuzhat" :intrest "Python" :age 23}])
+(def geeks [{:name "Basit" :interest "Clojure":age 24}
+            {:name "Zakir" :interest "Python" :age 29}
+            {:name "Nuzhat" :interest "Python" :age 23}])
 
 ;; reduce age of geeks by 2 years
 (reduce #(conj %1 {:name (:name %2) 

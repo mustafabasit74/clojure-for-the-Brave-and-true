@@ -37,9 +37,9 @@
 (seq [1 2 3])
 (seq #{1 2 3})
 
-(seq {:name "Mustafa Basit" :intrest "Clojure"})
+(seq {:name "Mustafa Basit" :interest "Clojure"})
 
-(into {} (seq {:name "Mustafa Basit" :intrest "Clojure"}))
+(into {} (seq {:name "Mustafa Basit" :interest "Clojure"}))
 
 (into [] (seq [1 2 3 4 5 ]))
 
@@ -51,7 +51,7 @@
 (into '() '(1 2 3 ))
 (into '() [1 2 3 ])
 
-(into {} '({:name "Mustafa Basit" :intrest "Clojure"} {:name "Zakir" :intrest "Python"}))
+(into {} '({:name "Mustafa Basit" :interest "Clojure"} {:name "Zakir" :interest "Python"}))
 
 
 ;; Clojure’s sequence functions use seq on their arguments first

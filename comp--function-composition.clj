@@ -84,3 +84,45 @@
   [& funs]
   (fn [& args]
    ..
+
+
+
+;; --
+;; Reducing over functions another way of composing functions
+
+(def user{:name "Mustafa Basit" :age 25})
+            
+(defn reduce-age
+  [user]
+  (let [reduce-by 4
+        fake-age (- (:age user) 4)
+        updated-user (assoc user :age fake-age)]
+    updated-user))
+
+(reduce-age user)
+;; => {:name "Mustafa Basit", :age 21}
+
+(defn add-item 
+  [old-map key value]
+  (assoc old-map key value))
+
+(add-item user :interest "clojure")
+;; => {:name "Mustafa Basit", :age 25, :interest "clojure"}
+
+;; function composition in action
+((comp reduce-age add-item) user  :interest "Clojure")
+;; => {:name "Mustafa Basit", :age 21, :interest "Clojure"}
+
+;; how to do same using reduce 
+
+(reduce (fn [new-user updation-fn]
+          (updation-fn new-user))
+        user 
+        [reduce-age #(add-item % :interest "Clojure")])
+;; => {:name "Mustafa Basit", :age 21, :interest "Clojure"}  
+
+;; what will happen above when anonymous function will be passed 
+;; ( updation-fn                           new-user)
+;; ( reduce-age                            {.....})
+;; (#(add-item % :interest "Clojure")      {.....}))   -- it equivalent to #(add-item {.....} :interest "Clojure")
+ 

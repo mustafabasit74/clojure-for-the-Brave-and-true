@@ -8,16 +8,16 @@
 (map + [1 2 3] [1 2 3])
 ;; (reduce #() [] .......) -pending 
 
-(def geeks [{:name "Basit" :intrest "Clojure":age 24}
-            {:name "Zakir" :intrest "Python" :age 29}
-            {:name "Nuzhat" :intrest "Python" :age 23}])
+(def geeks [{:name "Basit" :interest "Clojure":age 24}
+            {:name "Zakir" :interest "Python" :age 29}
+            {:name "Nuzhat" :interest "Python" :age 23}])
 
 (map (fn[geek]
       {:name (:name geek)
-       :intrest (:intrest geek)
+       :interest (:interest geek)
        :age (- (:age geek) 2 )} ) geeks)
 
 (reduce #(conj %1 {:name (:name %2)
-                   :intrest (:intrest %2)
+                   :interest (:interest %2)
                    :age (- (:age %2) 2) }) [] geeks)
                    

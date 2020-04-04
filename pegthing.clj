@@ -46,6 +46,8 @@
   [pos]
   (inc (count (take-while #(> pos %) tri))))
 
+;; we dont have to check whether neighbor is <= max-pos, because if destination is <= maxpos, that means neighbor is also than
+
 (defn connect
   "forms a mutual connection between two positions"
   [board max-pos pos neighbor destination]
@@ -80,6 +82,12 @@
         destination (+ neighbor row 2)]
     (connect board max-pos pos neighbor destination)))
 
+(defn add-pos
+  [board max-pos pos]
+  (let [pegged-board (assoc board [pos :pegged] true)]
+    (reduce (fn [new-board connection-creation-fn]
+              (connection-creation-fn new-board max-pos pos))
+            board
+            [connect-right connect-down-right connect-down-left])))
 
-
-
+;; (add-pos {} 15 1)
