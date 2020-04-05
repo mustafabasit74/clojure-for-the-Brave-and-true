@@ -29,8 +29,9 @@
 (defn triangular?
   [n]
   (= n (last (take-while #(>= n %) tri))))
-
-
+;; why he has not used above any membership check function, if all the numbers are in tri?
+;; because list is infinite, suppose if the elememt is not in the list, it keep checking it with next, next ....  - still confirm 
+ 
 (defn row-tri
   "takes row number and returns triangular number at the end of that row, if n = 2 return 3, if n = 3 return 6"
   [n]
@@ -91,3 +92,35 @@
             [connect-right connect-down-right connect-down-left])))
 
 ;; (add-pos {} 15 1)
+
+
+
+;; Reducing over a collection of functions is not a technique you’ll use often, 
+;; but it’s occasionally useful, and it demonstrates the versatility of functional programming.
+
+(defn new-board
+  [rows]
+  (let [initial-board {:rows rows}
+        max-pos (row-tri rows)]
+    (reduce (fn [board pos]
+               (add-pos board max-pos pos))
+            initial-board
+            (range 1 (inc max-pos)))))
+
+;; -- moving pegs
+(defn pegged?
+  [board pos]
+  (get-in board [:pos :pegged]))
+
+(defn remove-peg
+  [board pos]
+  (assoc-in [:pos :pegged] false))
+
+(defn place-peg
+  [board pos]
+  (assoc-in [:pos :pegged] true))
+
+(defn move-peg
+  "take out peg from p1 and place it in p2"
+  [board p1 p2]
+  (place-peg (remove-peg board p1) p2))
