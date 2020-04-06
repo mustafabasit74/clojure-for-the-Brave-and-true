@@ -85,10 +85,10 @@
 
 (defn add-pos
   [board max-pos pos]
-  (let [pegged-board (assoc board [pos :pegged] true)]
+  (let [pegged-board (assoc-in board [pos :pegged] true)]
     (reduce (fn [new-board connection-creation-fn]
               (connection-creation-fn new-board max-pos pos))
-            board
+            pegged-board
             [connect-right connect-down-right connect-down-left])))
 
 ;; (add-pos {} 15 1)
@@ -108,19 +108,33 @@
             (range 1 (inc max-pos)))))
 
 ;; -- moving pegs
+ 
 (defn pegged?
   [board pos]
-  (get-in board [:pos :pegged]))
+  (get-in board [pos :pegged]))
 
 (defn remove-peg
   [board pos]
-  (assoc-in [:pos :pegged] false))
+  (assoc-in [pos :pegged] false))
 
 (defn place-peg
   [board pos]
-  (assoc-in [:pos :pegged] true))
+  (assoc-in [pos :pegged] true))
 
 (defn move-peg
   "take out peg from p1 and place it in p2"
   [board p1 p2]
   (place-peg (remove-peg board p1) p2))
+
+
+(defn valid-moves
+  "Return a map of all valid moves for pos"
+  [board pos]
+  (into {}
+        (filter (fn [[destination jumped]]
+                  (and (not (pegged? board destination)) (:pegged? board jumped)))
+                (get-in board [pos :connections]))))
+
+(defn valid-move?
+  [board p1 p2]
+  (get (valid-move? board p1) p2))
