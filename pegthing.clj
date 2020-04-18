@@ -9,6 +9,7 @@
 
 ;; (time (nth even 1000000))
 
+;; in map, sometimes key also acts as a data -- :connections {6 3, 4 2 }
 
 ;; know more regarding triangular numbers - pending 
 
@@ -30,14 +31,14 @@
   [n]
   (= n (last (take-while #(>= n %) tri))))
 ;; why he has not used above any membership check function, if all the numbers are in tri?
-;; because list is infinite, suppose if the elememt is not in the list, it keep checking it with next, next ....  - still confirm 
+;; because list is infinite, suppose if the elememt is not in the list, it will keep checking it with next, next .... 
  
 (defn row-tri
   "takes row number and returns triangular number at the end of that row, if n = 2 return 3, if n = 3 return 6"
   [n]
   (last (take n tri)))
 
-;; why he does not used nth function above --(nth tri (dec n))
+;; why he has not used nth function above --(nth tri (dec n))
 ;; may be because - (nth tri (dec 0))
 ;; => Execution error (IndexOutOfBoundsException) at user/eval207 (REPL:1) .
 ;; => null 
@@ -47,11 +48,13 @@
   [pos]
   (inc (count (take-while #(> pos %) tri))))
 
-;; we dont have to check whether neighbor is <= max-pos, because if destination is <= maxpos, that means neighbor is also than
-
+;; we dont have to check whether neighbor is <= max-pos, because if destination is <= maxpos, that means neighbor is also then
 (defn connect
   "forms a mutual connection between two positions"
   [board max-pos pos neighbor destination]
+  ;; why we are checking here destination <= max-pos, -  because we dont have to create further connection, for last pos,
+  ;; if pos = 15, connect-down-left/rigth will return its valid neighour, destination values. In such cases return back board - may be this is the reason behind it
+  ;; but why he had not done it this way, pos == max-pos - return back ????
   (if (<= destination max-pos)
     (reduce (fn [new-board [p1 p2]]
               (assoc-in new-board [p1 :connections p2] neighbor))
