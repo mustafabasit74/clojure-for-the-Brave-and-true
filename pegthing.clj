@@ -93,7 +93,7 @@
               (connection-creation-fn new-board max-pos pos))
             pegged-board
             [connect-right connect-down-right connect-down-left])))
-
+;; but pegged will be always true??? - this function might be called on first time -- ?????
 ;; (add-pos {} 15 1)
 
 
@@ -118,26 +118,54 @@
 
 (defn remove-peg
   [board pos]
-  (assoc-in [pos :pegged] false))
+  (assoc-in board [pos :pegged] false))
 
 (defn place-peg
   [board pos]
-  (assoc-in [pos :pegged] true))
+  (assoc-in board [pos :pegged] true))
 
 (defn move-peg
   "take out peg from p1 and place it in p2"
   [board p1 p2]
   (place-peg (remove-peg board p1) p2))
 
+;; all the connections of a positions are not valid move always, because there is a constraint in the form of pegged?
+;;we have to find the valid moves among :connections
+
+;; ***
+;; why we are not checking below first is pos pegged or not
+;; e.g. if pos is pegged false, then what is the fun of checking for its valid moves
 
 (defn valid-moves
   "Return a map of all valid moves for pos"
   [board pos]
   (into {}
         (filter (fn [[destination jumped]]
-                  (and (not (pegged? board destination)) (:pegged? board jumped)))
+                  (and (not (pegged? board destination)) (pegged? board jumped)))
                 (get-in board [pos :connections]))))
 
+;; where he is checking is p1 pegged?
 (defn valid-move?
   [board p1 p2]
-  (get (valid-move? board p1) p2))
+  (get (valid-moves board p1) p2))
+
+
+(defn make-move
+  "move peg from p1 to p2, removing jumped peg"
+  [board p1 p2]
+  (if-let [jumped (valid-move? board p1 p2)]
+    (move-peg (remove-peg board jumped) p1 p2)))
+
+;; ***
+;; both partial and comp returns a function
+(defn can-move?
+  "Do any of the pegged position have valid moves?"
+  [board]
+  (some (comp not-empty (partial valid-moves board)) 
+        (map first (filter #(get (second %) :pegged)
+                           board))))
+;; What’s most interesting about this bit of code is that you’re using a
+;; chain of functions to derive a new function, similar to how you use chains
+;; of functions to derive new data. In Chapter 3, you learned that Clojure treats
+;; functions as data in that functions can receive functions as arguments and
+;; return them. Hopefully, this shows why that feature is fun and useful.

@@ -7,7 +7,7 @@
 (def product-list ["clock" "torch" "powerbank" "keyboard" "speakers"])
 
 (let [products (take 2 product-list)]
-  product )
+  products )
 
 
 (print-str product-list)

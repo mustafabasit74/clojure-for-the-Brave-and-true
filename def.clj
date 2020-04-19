@@ -1,5 +1,5 @@
 (def num 15)
-num
+nums
 
 (def future-programmer-names ["Wasit" "Basit" "Zakir" "Nasir" "Aarsh"] )
 future-programmer-names

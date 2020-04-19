@@ -29,14 +29,14 @@
 (map :weight my-backpack)
 
 ;; get total weight of backpack, including the weight of backpack itself 
-(reduce + 0.5 (map :weight backpack))
+(reduce + 0.5 (map :weight my-backpack))
 
 ;; ***
 ;; Clojurists often use map to retrieve the value associated with a keyword
 ;; ;;  from a collection of map data structures. Because keywords can be used as functions
 
 ;; throught out the heavy items whose weight exceeds 2kg limit, 
-(filter #(< (:weight %) 2) backpack) 
+(filter #(< (:weight %) 2) my-backpack) 
 
 
 

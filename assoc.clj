@@ -50,3 +50,10 @@
 
 
 (assoc {} [[:a 1] [:b 2]])
+;; Execution error (ArityException) at user/eval153 (REPL:1).
+;; Wrong number of args (2) passed to: clojure.core/assoc--5416
+
+(assoc {} :a 3)
+
+;key can be a vectors
+(assoc {} [:a :b] 3)

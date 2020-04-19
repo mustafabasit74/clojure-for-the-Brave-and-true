@@ -1,4 +1,4 @@
-identity - returns its argument 
+;; identity - returns its argument 
 
 (identity 4)
 (identity [1 2 3 4 5])

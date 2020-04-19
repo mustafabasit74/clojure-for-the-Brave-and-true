@@ -17,9 +17,9 @@
 
 ;; function arity	
 (defn no-params 
- "0 arity function"
- []
- ( "I take no params" ) )
+  "0 arity function"
+  [] 
+  "I take no params" ) 
 
 
 

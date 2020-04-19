@@ -15,7 +15,7 @@
 
 (+ 2 3 ) ;; we dont need to run this line of code, as it will always result in 5, we can optimize the code by replacing
          ;; it with 5, as simple as it can be.
-
+         
 (def num (+ accumulator (+ 5 6))) ;; this experssion can be replaced by (def num (+ accumulator 11)) 
 
 ;; ***

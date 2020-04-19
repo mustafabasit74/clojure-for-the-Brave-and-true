@@ -37,3 +37,5 @@
 ;; ??? litle bit confusion, clear it 
 ;; In general, you want to use partials when you find you’re repeating the
 ;; same combination of function and arguments in many different contexts. 
+
+;; see pegthing game's can-move? function for partial's implementation in action

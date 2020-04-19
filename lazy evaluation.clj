@@ -41,7 +41,7 @@
   [social-security-numbers]
   (first 
     (filter vampire?
-            map vampire-related-details social-security-numbers))))
+            (map vampire-related-details social-security-numbers))))
 
 ;; map returns a lazy sequence
 
