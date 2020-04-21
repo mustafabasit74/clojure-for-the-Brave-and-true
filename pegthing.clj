@@ -169,3 +169,54 @@
 ;; of functions to derive new data. In Chapter 3, you learned that Clojure treats
 ;; functions as data in that functions can receive functions as arguments and
 ;; return them. Hopefully, this shows why that feature is fun and useful.
+
+;; Rendering and Printing the Board
+
+(def alpha-start 97)
+(def alpha-end 123)
+(def letters (map (comp str char)
+                        (range alpha-start alpha-end)))
+(def pos-chars 3)
+
+(defn render-pos
+  [board pos]
+  (str (nth letters (dec pos))
+       (if (get-in board [pos :pegged])
+         (colorize "O" :blue)
+         (colorize "_" :red))))  
+
+(defn row-positions
+  "returns all the positions in the given row"
+  [row-num]
+  (range (inc (or (row-tri (dec row-num)) 0))
+         (inc (row-tri row-num))))
+
+(defn row-padding
+  "String of spaces to add to the beginning of a row to center it"
+  [row-num rows]
+  (let [pad-length  (/ (* (- rows row-padding) pos-chars) 2)]
+   (apply str (take pad-length (repeat " ")))))
+
+(defn render-row
+  [board row-num]
+  (str (row-padding row-num (:rows board))
+      (clojure.string/join " " (map (partial render-pos board)
+                                    (row-positions row-num)))))
+(defn print-board
+  [board]
+  (doseq [row-num (range 1 (inc (:rows board)))]
+    (println (render-row board row-num))))
+
+;; You use doseq when you want to perform side-effecting operations (like
+;; printing to a terminal) on the elements of a collection. The vector that
+;; immediately follows the name doseq describes how to bind all the elements
+;; in a collection to a name one at a time so you can operate on them. In this
+;; instance, you’re assigning the numbers 1 through 5 (assuming there are
+;; five rows) to the name row-num so you can print each row.
+
+;; ***
+;; Although printing the board technically falls under interaction, I wanted
+;; to show it here with the rendering functions. When I first started writing
+;; this game, the print-board function also generated the board’s string representation. 
+;; However, now print-board defers all rendering to pure functions
+;; which makes the code easier to understand and decreases the surface are a of our impure functions.
