@@ -10,5 +10,5 @@
 ;; eg print "hello" if number is equal to 10
 
 ;; beautiful hack sometimes, it can be used with "some" to return the value (see some)
-(def num 10)
-(and (= num 10) (print-str "hello"))
+(def n 10)
+(and (= n 10) (print-str "hello"))
