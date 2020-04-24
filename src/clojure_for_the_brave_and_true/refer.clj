@@ -37,6 +37,10 @@ awesome-languages
 to-do-list
 ;; => ["learn Scala" "learn LISP" "download books" "send mail"]
 
+;; ***
+(clojure.core/ns-interns clojure.core/*ns*)
+;; => {}
+
 (in-ns 'jet-brains)
 
 ;; ***
