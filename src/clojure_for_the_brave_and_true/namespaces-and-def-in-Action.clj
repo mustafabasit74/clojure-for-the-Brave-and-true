@@ -202,3 +202,17 @@ iust.scala/scala-book
 
 
 ;; see - "refer-and-alias.clj"
+
+;;Takeaway
+;; namespaces organize maps between symbols and vars, and that vars are references to
+;; Clojure objects (data structures, functions, and so on) . def stores an object
+;; and updates the current namespace with a map between a symbol and a var
+;; that points to the object.
+;; Clojure lets you create namespaces with create-ns, but often it’s more
+;; useful to use in-ns, which switches to the namespace as well
+
+;; require and use ensure that a namespace exists and is ready to be used
+;; and optionally let you refer and alias the corresponding namespaces. You
+;; should use ns to call require and use in your source files.
+
+;;  https://gist.github.com/ghoseb/287710/ is a great reference for all the vagaries of using ns.
