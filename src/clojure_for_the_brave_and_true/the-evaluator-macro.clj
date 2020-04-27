@@ -167,17 +167,3 @@ if
 
 ;; On their own, symbols and their referents don’t actually do anything;
 ;; Clojure performs work by evaluating lists.
-
-
-
-
-
-
-
-
-
-(eval "(+ 1 2 3)")
-;; => "(+ 1 2 3)"
-
-(eval '(+ 1 2 3))
-;; => 6
