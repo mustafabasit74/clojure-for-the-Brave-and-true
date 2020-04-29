@@ -256,3 +256,80 @@
 
 ;; To sum up, macros receive unevaluated, arbitrary data structures
 ;; as arguments and return data structures that Clojure evaluates.
+
+;; Refactoring a Macro and Unquote Splicing
+;; modification to code-critic
+(defn criticize-code
+  [criticism code]
+  `(println ~criticism (quote ~code)))
+
+
+(defmacro code-critic
+  [bad good]
+  `(do 
+     ~(criticize-code "Great squid of Madrid, this is bad code:" bad)
+     ~(criticize-code "Sweet Gorilla of Manila, this is good code:" good)))
+
+(code-critic (1 + 2) (+ 1 2))
+;; => Great squid of Madrid, this is bad code: (1 + 2)
+;;    Sweet Gorilla of Manila, this is good code: (+ 1 2)
+;;    nil
+
+;; improvment
+;; Unquote Splicing
+
+(defmacro code-critic
+  [bad good]
+  `(do 
+     ~(map #(apply criticize-code %) 
+           [["Great squid of Madrid, this is bad code:" bad]
+            ["Sweet Gorilla of Manila, this is good code:" good]])))
+
+(code-critic (1 + 1) (+ 1 1))
+;; => Execution error (NullPointerException) at user/eval7829 (form-init7335944389684337832.clj:286).
+;;    null
+
+;; The problem is that map returns a list, and in this case, it returned a list of println expressions.
+;; (do
+;;   ((clojure.core/println "criticism" '(1 + 1))
+;;     (clojure.core/println "criticism" '(+ 1 1))))
+
+;; then evaluates the first & second println call
+;; (do
+;;   (nil nil))
+
+;;  unquote splicing was invented precisely to handle this kind of situation.
+;;   Unquote splicing is performed with ~@.
+
+`(+ ~(list 1 2 3))
+;; => (clojure.core/+ (1 2 3))
+
+`(+ ~@(list 1 2 3))
+;; => (clojure.core/+ 1 2 3)
+
+`(println ~(map #(.toUpperCase %)
+               ["basit" "wasit" "zakir" ]))
+;; => (clojure.core/println ("BASIT" "WASIT" "ZAKIR"))
+
+
+`(println ~@(map #(.toUpperCase %)
+                ["basit" "wasit" "zakir"]))
+;; => (clojure.core/println "BASIT" "WASIT" "ZAKIR")
+
+;; Unquote splicing unwraps a seqable data structure, placing its contents
+;; directly within the enclosing syntax-quoted data structure.
+
+
+(defmacro code-critic
+  [bad good]
+  `(do
+     ~@(map #(apply criticize-code %)
+           [["Great squid of Madrid, this is bad code:" bad]
+            ["Sweet Gorilla of Manila, this is good code:" good]])))
+
+(code-critic (1 + 1) (+ 1 1))
+;; => Great squid of Madrid, this is bad code: (1 + 1)
+;;    Sweet Gorilla of Manila, this is good code: (+ 1 1)
+;;    nil
+
+
