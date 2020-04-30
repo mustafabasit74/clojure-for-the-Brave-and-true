@@ -131,6 +131,26 @@
         "true"
         "false"  )
 
+(macroexpand '(unless true
+                      "true"
+                      "false"))
+;; => (if true "false" "true")
+
+(defmacro unless
+  [test & body]
+  (conj body (list 'not test) 'if))
+
+(unless true
+        "true"
+        "false")
+;; => "false"
+
+(macroexpand '(unless true
+                      "true"
+                      "false"))
+;; => (if (not true) "true" "false")
+
+
 ;; Quoting v/s Syntax Quoting
 ;; '       v/s `
 
@@ -276,6 +296,8 @@
 ;;    nil
 
 ;; improvment
+
+;; ***
 ;; Unquote Splicing
 
 (defmacro code-critic

@@ -55,3 +55,19 @@
 ;; Clojure is homoiconic: its text represents data structures, and those data structures
 ;; represent abstract syntax trees, allowing you to more easily reason about
 ;; how to construct syntax-expanding macros.
+
+(assoc {} :a 1)
+;; => {:a 1}
+
+(assoc {} :a 1 :b 2)
+;; => {:a 1, :b 2}
+
+(-> {}
+    (assoc :a 1))
+;; => {:a 1}
+
+(-> {}
+    (assoc :a 1)
+    (assoc :b 2))
+;; => {:a 1, :b 2}
+

@@ -21,4 +21,33 @@
 (concat nil [1 2 3] nil)
 (concat nil nil)
 
+;; concat basically converts two lists into one
+
+;; list 1
+(list 'let ['k 10])
+
+;; list 2
+(list ('println "x:" 'x))
+
+
+(concat (list 'let ['x 10] ) 
+        (list (list 'println "x:" 'x) 
+              (list 'println "Bye!")))
+;; => (let [x 10] (println "x:" x) (println "Bye!"))
+
+
+(eval (concat (list 'let ['x 10])
+              (list (list 'println "x:" 'x)
+                    (list 'println "Bye!"))))
+;; => x: 10
+;;    Bye!
+;;    nil
+
+//
+
+
+
+
+
+
 
