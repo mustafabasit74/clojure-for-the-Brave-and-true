@@ -132,6 +132,25 @@
 ;;    I shall need to say:  Oh, big deal!
 ;;   nil
 
+;; This gensym’d symbol is distinct from any symbols within
+;; stuff-to-do, so you avoid variable capture. Because this is such a common
+;; pattern, you can use an auto-gensy. Auto-gensyms are more concise and convenient ways to use gensyms:
+
+`(message#)
+;; => (message__17648__auto__)
+
+`(let [name# "Basit"]
+   name#)
+;; => (clojure.core/let [name__18127__auto__ "Basit"] name__18127__auto__)
+
+;; In this example, you create an auto-gensym by appending a hash
+;; mark (or hashtag, if you must insist) to a symbol within a syntax-quoted
+;; list. Clojure automatically ensures that each instance of x# resolves to the
+;; same symbol within the same syntax-quoted list, that each instance of y#
+;; resolves similarly, and so on.
+;; gensym and auto-gensym are both used all the time when writing macros
+;; and they allow you to avoid variable capture.
+
 
 (defmacro simple
   []
@@ -145,6 +164,7 @@
 ;;    user/x - failed: map? at: [:bindings :form :map-destructure] spec: :clojure.core.specs.alpha/map-bindings
 ;;    user/x - failed: map? at: [:bindings :form :map-destructure] spec: :clojure.core.specs.alpha/map-special-binding
 
+;; using gensym
 (defmacro simple
   []
   (def x (gensym))
@@ -154,4 +174,154 @@
 (simple)
 ;; => X:  10
 ;;    nil
+
+;; ***
+;; using auto-gensym
+(defmacro simple
+  []
+  `(let [x# 10]
+     (println "X: " x#)))
+
+(simple)
+;; => X:  10
+;;    nil
+
+
+;; Double Evaluation
+;; Another gotcha to watch out for when writing macros is double evaluation
+;; which occurs when a form passed to a macro as an argument gets evaluated
+;; more than once
+(boolean :key)
+;; => true
+
+(boolean (println "Hi!"))
+;; => false
+
+(boolean (Thread/sleep 3000))
+;; => false
+
+(if (or (println "Hello!") (Thread/sleep 4000) (println "Bye!") true)  
+  "Thread")
+;; => Hello!
+;;    Bye!
+;;    "Thread"
+
+
+;; ***
+(defmacro report
+  [to-try]
+  `(if ~to-try
+     (println (quote ~to-try) "was successful:" ~to-try)
+     (println (quote ~to-try) "was not successful" ~to-try )))
+
+(report (do (Thread/sleep 1000) (+ 1 1 )))
+;; *** 
+;; This code is meant to ***test its argument for truthiness. If the argument
+;; is truthy, it’s considered successful; if it’s falsey, it’s unsuccessful. The macro
+;; prints whether or not its argument was successful.
+;; In this case, you would actually sleep for two seconds because (Thread/sleep 1000) gets 
+;; evaluated twice:
+
+;; Here’s how you could avoid this problem:
+(defmacro report
+  [to-try]
+  `(let [result# ~to-try]
+     (if result#
+       (println (quote ~to-try) "was successful:" result#)
+       (println (quote ~to-try) "was not successful" result#))))
+
+(report (do (Thread/sleep 1000) (+ 1 1)))
+
+;; By placing to-try in a let expression, you only evaluate that code once
+;; and bind the result to an auto-gensym’d symbol, result#, which you can now
+;; reference without reevaluating the to-try code.
+
+
+;; Macros All the Way Down
+;; One subtle pitfall of using macros is that you can end up having to write
+;; more and more of them to get anything done. This is a consequence of the
+;; fact that macro expansion happens before evaluation
+
+(doseq [x [1 2 3 4 5]]
+  (println x))
+;; => 1
+;;    2
+;;    3
+;;    4
+;;    5
+;;    nil
+
+(doseq [x [1 2 3 ]
+        y [10 20]]
+  (println x y))
+;; => 1 10
+;;    1 20
+;;    2 10
+;;    2 20
+;;    3 10
+;;    3 20
+;;    nil
+
+(report (= 1 1))
+;; => (= 1 1) was successful: true
+;;    nil
+
+(report (= 1 2))
+;; => (= 1 2) was not successful false
+;;    nil
+
+;; ***
+(doseq [code ['(= 1 1) '(= 1 2 ) '(false) '(nil)]]
+        (report code))
+;; => code was successful: (= 1 1)
+;;    code was successful: (= 1 2)
+;;    code was successful: (false)
+;;    code was successful: (nil)
+;;    nil
+
+;; The report macro works fine when we pass it functions individually, but
+;; when we use doseq to iterate report over multiple functions, it’s a worthless failure
+;; report receives the unevaluated symbol code in each iteration; however, we want it to receive
+;;  whatever code is bound to at evaluation time. 
+
+;;  ***
+;;  But report, operating at macro expansion time, just can’t access those values.
+;; To resolve this situation, we might write another macro, like this:
+
+
+; (defmacro doseq-macro
+; [macroname  args]
+; `(do (~macroname  ~args)))
+
+;(doseq [code ['(= 1 1) '(= 1 2) '(false) '(nil)]]
+;  (doseq-macro report code))
+
+
+(defmacro doseq-macro 
+  [macroname & args]
+  `(do 
+     ~@(map (fn [arg]
+              (list macroname arg) )
+          args )))
+
+(doseq-macro report (= 1 1) (= 1 2) false true)
+;; => (= 1 1) was successful: true
+;;    (= 1 2) was not successful false
+;;    false was not successful false
+;;    true was successful: true
+;;    nil
+
+(def user "khadim Ali")
+
+(defmacro foo
+  []
+  (def text "strange")
+  `(println user))
+
+(foo)
+;; => Khadim Ali
+
+text
+;; => "strange"
+
 
