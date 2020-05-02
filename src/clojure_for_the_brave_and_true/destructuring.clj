@@ -49,3 +49,21 @@
 ;; the part of the function that actually does something: the function body!
 
 
+
+;; Associative Destructuring
+
+(def details {:name "Basit"
+              :interest ["clojure" "Scala" "Elixir"]
+              :qualification "MCA"})
+
+(let [{name :name
+       interest :interest
+       qualification :qualification} details]
+  
+  (println "Name:" name)
+  (println "Interest:" interest)
+  (println "Qualification:" qualification))
+
+;; => Name: Basit
+;;    Interest: [clojure Scala Elixir]
+;;    Qualification: MCA
