@@ -216,3 +216,20 @@ iust.scala/scala-book
 ;; should use ns to call require and use in your source files.
 
 ;;  https://gist.github.com/ghoseb/287710/ is a great reference for all the vagaries of using ns.
+
+(def width (+ 3 4))
+(deref #'user/width)
+;; => 7
+(ns-interns *ns*)
+('width (ns-interns *ns*))
+(println (deref ('width (ns-interns *ns*))))
+(println (deref ('width (ns-map *ns*))))
+
+(let [width (+ 1000 9)]
+  (println (ns-interns *ns*))
+  (println "width:" (deref ('width (ns-interns *ns*))))
+  (println "width:" (deref ('width (ns-map *ns*))))
+;; where loacal binding's symbol and var is - ???
+;; local binding shadows variable - but how???
+;; what happens in namespace???   
+  (println "width:" width))
