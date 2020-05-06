@@ -64,3 +64,22 @@
 ;; to the question only if the answer is not nil. If the answer
 ;; is nil it will move to the next question. Until finally it
 ;; gives up and returns 42.
+
+
+;; fun of if-let 
+(defn some-condition
+  [data]
+  true)
+
+(let [result (some-condition "ABC")]
+  (if (true? result)
+    "Success"
+    "Failure"))
+;; => "success"
+
+(if-let [result (some-condition "ABC")]
+  "Success"
+  "Failure")
+;; => "success"
+
+

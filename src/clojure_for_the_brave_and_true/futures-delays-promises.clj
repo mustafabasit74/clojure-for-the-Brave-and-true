@@ -180,4 +180,130 @@ sym
 ;;    processing item:4
 ;;    processing item:9
 
-;; Actual book example
+;; Actual example now
+
+(def headshots ["rubic.jpg" "emoji.jpg" "clock.jpg" "pen.jpg"])
+
+(defn email-user
+  [email-address]
+  (println "Sending headshot notification to " email-address))
+
+(defn upload-document
+  [headshot]
+  true)
+
+(let [notify (delay (email-user "basit@gmail.com"))]
+  (doseq [headshot headshots]
+    (future 
+      (upload-document headshot)
+      (force notify))))
+
+;; you define a vector of headshots to upload (headshots) and two functions (email-user and upload-document) to
+;; pretend-perform the two operations.
+
+;; Even though (force notify) will be evaluated three times, the
+;; delay body is evaluated only once
+
+;; This technique can help protect you from the mutual exclusion
+;; Concurrency Goblin—the problem of making sure that only one thread
+;; can access a particular resource at a time
+
+;; Promises
+;; Promises allow you to express that you expect a result without having to
+;; define the task that should produce it or when that task should run.
+
+(def my-promise (promise))
+(deliver my-promise (+ 1 3))
+;; => #promise[{:status :ready, :val 4} 0x8091d10]
+@my-promise
+;; => 4
+;; You can only deliver a result to a promise once.
+(deliver my-promise (+ 1 1110000))
+;; => nil
+
+;; if you had tried to dereference my-promise without first delivering a value, the program would block until
+;; a promise was delivered, just like with futures and delays. 
+
+(def another-promise (promise))
+;; => #'user/another-promise
+
+@another-promise
+;; stuck...
+
+
+;; One use for promises is to find the first satisfactory element in a collection of data.
+
+(def yak-butter-international 
+  {:store "Yak Butter International"
+   :price 80
+   :smoothness 90})
+
+(def premium-yak-butter
+  {:store "Premium Yak Butter"
+   :price 120
+   :smoothness 85})
+
+;; This is the butter that meets our requirements
+(def baby-got-yak
+  {:store "Baby Got Yak"
+   :price 94
+   :smoothness 99})
+
+(def Ammul-yak-butter
+  {:store "Ammul Butter"
+   :price 200
+   :smoothness 75})
+
+(defn mock-api-call
+  [result]
+  (Thread/sleep 1000)
+  result)
+
+(defn satisfactory?
+  [butter]
+  (and 
+   (<= (:price butter) 100) 
+   (>= (:smoothness butter) 97)
+   butter))
+
+(time (some (comp satisfactory? mock-api-call)
+            [yak-butter-international premium-yak-butter baby-got-yak Ammul-yak-butter]))
+
+;; => {"Elapsed time: 3001.044689 msecs"
+;;    {:store "Baby Got Yak", :price 94, :smoothness 99}
+
+(time (let [butter-promise (promise)]
+        (doseq [butter [yak-butter-international premium-yak-butter baby-got-yak Ammul-yak-butter]]
+          (future
+            (if-let [satifactory-butter (satisfactory? (mock-api-call butter))]
+              (deliver butter-promise satifactory-butter))))
+        (println "winner is " @butter-promise)))
+;; => winner is  {:store Baby Got Yak, :price 94, :smoothness 99}
+;;    "Elapsed time: 1001.188937 msecs"
+
+;; You might be wondering what happens if none of the yak butter is satisfactory. If that happens, the dereference would block forever and tie up the
+;; thread. To avoid that, you can include a timeout:
+(let [p (promise)]
+  (deref p 1000 "timed out"))
+
+;; You can view this as a way to protect yourself from the reference cell
+;; Concurrency Goblin. Because promises can be written to only once, you
+;; prevent the kind of inconsistent state that arises from nondeterministic reads and writes.
+
+
+;; register callbacks
+;; JavaScript callbacks are a way of defining code that should
+;; execute asynchronously once some other code finishes.
+
+(let [wisdom-promise (promise)]
+  (future (println "Here's some wisdom promise: " @wisdom-promise)
+          (println "Bye!")) 
+  (Thread/sleep 1000)
+  (println "do something else")
+  (deliver wisdom-promise "Whisper your way to success"))
+
+;; => do something else
+;;    Here's some wisdom promise:  Whisper your way to success
+;;    Bye!
+
+
