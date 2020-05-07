@@ -5,6 +5,9 @@
 ;; One key difference between functions and macros is that function arguments are fully evaluated 
 ;; before they’re passed to the function whereas macros receive arguments as unevaluated data.
 
+;; The macro will require you to hold runtime logic and macro expansion logic in your head 
+;; at the same time to understand what’s going on
+
 (defmacro infix
   [infixed]
   (list (second infixed) (first infixed) (last infixed)))
