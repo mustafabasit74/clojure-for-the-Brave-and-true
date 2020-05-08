@@ -67,3 +67,34 @@
 ;; => Name: Basit
 ;;    Interest: [clojure Scala Elixir]
 ;;    Qualification: MCA
+
+(defn foo
+  [{:keys [name interest qualification]}]
+  (println name interest qualification))
+
+(foo details )
+;; => Basit [clojure Scala Elixir] MCA
+
+
+(defn foo
+  [{:keys [name interest qualification another-key]}]
+  (println name interest qualification another-key))
+
+(foo details)
+;; => Basit [clojure Scala Elixir] MCA nil
+
+
+(defn foo
+  [{:keys [name inte qual]}]
+  (println name inte qual))
+
+(foo details)
+;; => Basit nil nil
+
+
+(defn foo
+  [{:keys [qualification name interest]}]
+  (println name interest qualification))
+
+(foo details)
+;; => Basit [clojure Scala Elixir] MCA

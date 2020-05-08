@@ -27,8 +27,7 @@
 ;; b) we choose to associate the identity with the new value.
 
 ;; Atoms
-(def fred (atom {:cuddle-hunger-level 0
-                 :precent-deteriorated 0}))
+
 ;; => #'user/fred
 
 (ns-interns *ns*)
@@ -89,12 +88,13 @@ variable
 ;; To update the atom so that it refers to a new state, you use swap!. This might seem contradictory, 
 ;; because I said that atomic values are unchanging. Indeed, they are! 
 ;; But now we’re working with the atom reference type, a construct that refers to atomic values.
+
 ;; The atomic values don’t change, but the reference type can be updated and assigned a new value.
 
 ;; swap! receives an atom and a function as arguments. It applies the function to the atom’s current
 ;; state to produce a new value, and then it updates the atom to refer to this new value. 
 ;; The new value is also returned.
- 
+
 ;; swap does not return a new atom
 @fred
 ;; => {:cuddle-hunger-level 0, :precent-deteriorated 0}
@@ -109,5 +109,104 @@ variable
 @fred
 ;; => {:cuddle-hunger-level 1, :precent-deteriorated 0}
 
+;; Find Answer - pending
+;; swap! receives an atom and a function as arguments. 
+;; It applies the function to the atom’s current state to produce a new value,
+;; ????????? and then it updates the atom to refer to this new value. ?????????????? 
 
+;; how it is possible, what about mutability?
+
+
+;; Unlike Ruby, it’s not possible for fred to be in an inconsistent state
+;; because you can update the hunger level and deterioration percentage at the same time
+
+(swap! fred       
+       (fn [current-state]
+         (merge-with +
+                     current-state 
+                     {:cuddle-hunger-level 1
+                      :precent-deteriorated 1})))
+;; => {:cuddle-hunger-level 2, :precent-deteriorated 1}
+;; 
+@fred
+;; => {:cuddle-hunger-level 2, :precent-deteriorated 1}
+
+
+;; You can also pass swap! a function that takes multiple arguments.
+(defn increase-cuddle-hunger-level
+  [current-state increase-by]
+  (merge-with + 
+              current-state 
+              {:cuddle-hunger-level increase-by}))
+
+;; test above function
+(increase-cuddle-hunger-level @fred 10)
+;; => {:cuddle-hunger-level 12, :precent-deteriorated 1}
+
+@fred
+;; => {:cuddle-hunger-level 2, :precent-deteriorated 1}
+
+(swap! fred 
+       increase-cuddle-hunger-level  10)
+;; => {:cuddle-hunger-level 12, :precent-deteriorated 1}
+
+@fred
+;; => {:cuddle-hunger-level 12, :precent-deteriorated 1}
+
+(swap! fred
+       increase-cuddle-hunger-level  3)
+;; => {:cuddle-hunger-level 15, :precent-deteriorated 1}
+
+@fred
+;; => {:cuddle-hunger-level 15, :precent-deteriorated 1}
+
+;; Or you could express the whole thing using Clojure’s built-in functions. (update-in)
+
+(swap! fred
+       update-in [:cuddle-hunger-level] + 5)
+;; => {:cuddle-hunger-level 20, :precent-deteriorated 1}
+
+
+;; By using atoms, you can retain past state.
+(let [num (atom 1)
+      s1 @num]
+  (swap! num inc)
+  (println "State 1: " s1)
+  (println "Current State: " @num))
+;; => State 1:  1
+;;    Current State:  2
+
+;; if two separate threads call (swap! fred increase-cuddle-hunger-level 1) ?
+;; Is it possible for one of the increments to get lost
+;; The answer is no! swap! implements compare-and-set semantics
+;; One detail to note about swap! is that atom updates happen synchronously
+
+;; Sometimes you’ll want to update an atom without checking its current value.
+
+(reset! fred {:cuddle-hunger-level 0
+              :percent-deteriorated 0})
+;; => {:cuddle-hunger-level 0, :percent-deteriorated 0}
+
+(def balance (atom {:x 10
+                    :y 20}))
+(let [x 3
+      y 4]
+  (future
+    (swap! balance
+           (fn [current-state]
+             (merge-with +
+                         current-state
+                         {:x x}))))   
+  (future
+    (swap! balance
+           #(merge-with +
+                        % 
+                        {:y y}))))
+;; => #future[{:status :ready, :val {:x 13, :y 24}} 0x76f46331]
+
+(reset! balance {:y 0})
+;; => {:y 0}
+
+@balance
+;; => {:y 0}
 
