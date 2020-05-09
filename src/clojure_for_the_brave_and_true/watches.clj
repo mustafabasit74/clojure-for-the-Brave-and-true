@@ -117,3 +117,27 @@
 ;;    Your Account has been closed, as you have paid all the money Back
 ;;    {:name "Mr. Hyder Bhat", :outstanding-balance 0}
 
+;; remove watch
+(def phone (atom {:price 12999}))
+
+(defn phone-watch
+  [key watched old-state new-state]
+  (println "From" old-state "=>" new-state))
+
+(add-watch phone :phone-watch-key phone-watch)
+;; => #atom[{:price 12999} 0x32cc923a]
+
+(swap! phone update-in [:price] + 200)
+;; => From {:price 12999} => {:price 13199}
+;;    {:price 13199}
+
+(swap! phone update-in [:price] + 500)
+;; => From {:price 13199} => {:price 13699}
+;;    {:price 13699}
+
+(remove-watch phone :phone-watch-key)
+;; => #atom[{:price 13699} 0x11815278]
+
+(swap! phone update-in [:price] + 500)
+;; => {:price 14199}
+

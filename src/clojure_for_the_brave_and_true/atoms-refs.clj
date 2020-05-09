@@ -27,7 +27,9 @@
 ;; b) we choose to associate the identity with the new value.
 
 ;; Atoms
-
+;; Atoms are ideal for managing the state of independent identities
+(def fred (atom {:cuddle-hunger-level 0
+                 :percent-deteriorated 0}))
 ;; => #'user/fred
 
 (ns-interns *ns*)
@@ -82,8 +84,8 @@ variable
 ;;    class java.lang.Long cannot be cast to class clojure.lang.IFn (java.lang.Long is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'app')
 
 (let [zombie-state @fred]  
-  (if (>= (:precent-deteriorated zombie-state) 50)
-    (future (println (:precent-deteriorated zombie-state)))))
+  (if (>= (:percent-deteriorated zombie-state) 50)
+    (future (println (:percent-deteriorated zombie-state)))))
 
 ;; To update the atom so that it refers to a new state, you use swap!. This might seem contradictory, 
 ;; because I said that atomic values are unchanging. Indeed, they are! 
@@ -125,7 +127,7 @@ variable
          (merge-with +
                      current-state 
                      {:cuddle-hunger-level 1
-                      :precent-deteriorated 1})))
+                      :percent-deteriorated 1})))
 ;; => {:cuddle-hunger-level 2, :precent-deteriorated 1}
 ;; 
 @fred
