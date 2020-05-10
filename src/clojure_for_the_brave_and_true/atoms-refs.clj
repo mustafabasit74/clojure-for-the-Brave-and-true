@@ -26,8 +26,11 @@
 ;; a) A process generates a new value  
 ;; b) we choose to associate the identity with the new value.
 
+
 ;; Atoms
 ;; Atoms are ideal for managing the state of independent identities
+;; In Clojure metaphysics, state is the value of an identity at a point in time, and identity is a handy way 
+;; to refer to a succession of values produced by some process
 (def fred (atom {:cuddle-hunger-level 0
                  :percent-deteriorated 0}))
 ;; => #'user/fred

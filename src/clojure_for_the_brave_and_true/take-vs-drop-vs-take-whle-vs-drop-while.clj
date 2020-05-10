@@ -15,7 +15,7 @@
 
 (def food-journal
   [{:month 1 :day 1 :human 2 :critter 0}
-   {:month 1 :day 2 :human 5 :critter 1}
+   {:month 1 :day 2 :humsan 5 :critter 1}
    {:month 2 :day 1 :human 1 :critter 4}
    {:month 2 :day 2 :human 3 :critter 2}
    {:month 3 :day 1 :human 2 :critter 8}

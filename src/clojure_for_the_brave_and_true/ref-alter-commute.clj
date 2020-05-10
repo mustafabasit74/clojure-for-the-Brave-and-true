@@ -2,6 +2,11 @@
 ;; though, we need to express that an event should update the state of more
 ;; than one identity simultaneously. Refs are the perfect tool for this scenario.
 
+;; The atom reference type allows you to create an identity that you can safely 
+;; update to refer to new values using swap! and reset!. 
+;; The ref reference type is handy when you want to update more than one identity
+;;  using transaction semantics, and you update it with alter! and commute!.
+
 ;; recording sock gnome transactions
 
 (def sock-varieties #{"darned" "argyle" "wool" "horsehair" "mulleted"
