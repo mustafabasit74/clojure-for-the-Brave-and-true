@@ -31,6 +31,12 @@
 ;; Atoms are ideal for managing the state of independent identities
 ;; In Clojure metaphysics, state is the value of an identity at a point in time, and identity is a handy way 
 ;; to refer to a succession of values produced by some process
+
+;; The atom reference type allows you to create an identity that you can safely 
+;; update to refer to new values using swap! and reset!. 
+;; The ref reference type is handy when you want to update more than one identity
+;;  using transaction semantics, and you update it with alter! and commute!.
+
 (def fred (atom {:cuddle-hunger-level 0
                  :percent-deteriorated 0}))
 ;; => #'user/fred
@@ -114,12 +120,25 @@ variable
 @fred
 ;; => {:cuddle-hunger-level 1, :precent-deteriorated 0}
 
-;; Find Answer - pending
+;; Question
 ;; swap! receives an atom and a function as arguments. 
 ;; It applies the function to the atom’s current state to produce a new value,
-;; ????????? and then it updates the atom to refer to this new value. ?????????????? 
-
+;; and then it updates the atom refrence to refer to this new value. ?????????????? 
 ;; how it is possible, what about mutability?
+;; 
+;;  Atom V/S Atom refrence type
+;; Atom - Immutable 
+;; (atom {:cuddle-hunger-level 0 
+;;               :percent-deteriorated 0})
+
+;; Atom refrence type - mutable
+;; fred
+
+;; still find answer - 
+;; what is this mutable thing. 
+;; Does it have any relation with dynamic vars
+;; Are we are altering the root-var of this immutable thing
+
 
 
 ;; Unlike Ruby, it’s not possible for fred to be in an inconsistent state
