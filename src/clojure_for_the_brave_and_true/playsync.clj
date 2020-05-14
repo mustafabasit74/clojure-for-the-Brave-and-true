@@ -2,7 +2,7 @@
 ;; Waiting is a key aspect of working with core.async processes
 (ns clojure-for-the-brave-and-true.playsync
   (:require [clojure.core.async :as a
-             :refer [>! <! >!! <!! go chan buffer close! alts!! sliding-buffer dropping-buffer thread]]))
+             :refer [>! <! >!! <!! go chan buffer close! alts!! timeout sliding-buffer dropping-buffer thread]]))
 
 (def echo-chan (chan))
 (go (println (<! echo-chan)))
@@ -13,6 +13,7 @@
 (>!! echo-chan "Ketchup")
 ;; blocked... 
 ;; but why?
+;; because there is no new process in thread pool to recieve data from channel  
 
 ;; when trying to put a message on channel or take a message off of it, processed wait and do nothing until the put or take succeeds
 
@@ -111,15 +112,15 @@
 
 
 (def echo-chan (chan))
-(thread 
+(thread
   (println (<!! echo-chan))
   (println "Bye!"))
 
 (>!! echo-chan "Wasit")
 
 
-(let [th-chan (thread (println "Do Something") 
-                      :doSomethingElse... 
+(let [th-chan (thread (println "Do Something")
+                      :doSomethingElse...
                       "Thread Return a channel, and put the return value on returned channel"
                       "No blocking-*"
                       "Long Running process......"
@@ -141,7 +142,7 @@
 ;; As we know both take and put block threads untill..
 ;; In case of buffered channels 
 
-(def d1 (chan) )
+(def d1 (chan))
 (>!! d1 "This put will block main thread ")
 ;; blocked...
 
@@ -162,9 +163,9 @@
   []
   (let [in (chan)
         out (chan)]
-  (go 
-    (<! in)
-    (>! out "hot dog"))
+    (go
+      (<! in)
+      (>! out "hot dog"))
     [in out]))
 
 (let [[in out] (hot-dog-machine)]
@@ -182,28 +183,28 @@
     (go (loop [hc hot-dog-count]
           (if (> hc 0)
             (let [input (<! in)]
-              (if (= 3 input )
-                (do 
+              (if (= 3 input)
+                (do
                   (>! out "hot dog")
                   (recur (dec hc)))
-                (do 
+                (do
                   (>! out "Wilted lettuce")
                   (recur hc))))
-            (do 
+            (do
               (close! in)
               (close! out)))))
     [in out]))
 
-(let [[in out] (hot-dog-machine-v2 2)] 
+(let [[in out] (hot-dog-machine-v2 2)]
   (>!! in "pocket lint")
   (println (<!! out))
-  
+
   (>!! in 3)
   (println (<!! out))
-  
+
   (>!! in 3)
   (println (<!! out))
-  
+
   (>!! in 3)
   (println (<!! out)))
 ;; => Wilted lettuce
@@ -211,8 +212,35 @@
 ;;    hot dog
 ;;    nil
 
+;; ***
+;; hot dog machine doesn’t accept more money until you’ve dealt with whatever it’s dispensed.
+;; This allows you to model state-machine-like behavior, where the completion of channel operations triggers state transitions. For example, you can
+;; think of the vending machine as having two states: ready to receive money
+;; and dspensed item. Inserting money and taking the item trigger transitions between the two.
+(let [[in out] (hot-dog-machine-v2 4)]
+  (>!! in 3)
+  (>!! in 3)
+  (println (<!! out))
+  (println (<!! out)))
+;; blocked...
+
+
+
 
 ;; pipeline of processes
+
+(let [c1 (chan)
+      c2 (chan)
+      c3 (chan)]
+  (go (>! c2 (<! c1)))
+  (go (>! c3 (<! c2)))
+  (go (println (<! c3)))
+  (>!! c1 "Hello World"))
+;; => true
+;;    Hello World
+
+
+
 
 (def e1 (chan))
 ;; => #'clojure-for-the-brave-and-true.playsync/e1
@@ -221,7 +249,7 @@
 ;; => #'clojure-for-the-brave-and-true.playsync/e2
 
 
-(go 
+(go
   (>! e2 (<! e1))
   (println "Data on e2 channel is:" (<! e2))
   (println "Bye!"))
@@ -243,6 +271,82 @@
 (go (>! e2 "unblock"))
 ;; => Data on e2 channel: unblock
 ;;    Bye!
+
+
+
+
+
+;; pipeline of processes: just make the in channel of one process the out channel of another
+
+(let [c1 (chan)
+      c2 (chan)
+      c3 (chan)]
+  ;; from c1 to c2
+  (go (>! c2 (clojure.string/reverse (<! c1))))
+
+  ;; from c2 to c3
+  (go (>! c3 (clojure.string/upper-case (<! c2))))
+
+  ;; take result from c3
+  (go (println (<! c3)))
+
+  ;; put data on c1 
+  (>!! c1 "redrum"))
+;; => true
+;;    MURDER
+
+
+;; alts!!
+
+(defn upload
+  [headshot c]
+  (go (Thread/sleep (rand 100))
+      (>! c headshot)))
+
+(let [c1 (chan)
+      c2 (chan)
+      c3 (chan)]
+  (upload "playful.png" c3)
+  (upload "smile.png" c1)
+  (upload "fun.png" c2)
+  (let [[headshot channel] (alts!! [c1 c2 c3])]
+    (println "Sending headshot notification for " headshot)))
+;; => Sending headshot notification for  playful.png
+
+;; => Sending headshot notification for  smile.png
+
+
+
+(let [c1 (chan)]
+  (upload "playful.png" c1)
+  (let [[headshot channel] (alts!! [c1 (timeout 10)])]
+    (if headshot
+      (println "Sending headshot notification for " headshot)
+      (println "Timed out"))))
+;; => Timed out
+
+
+(let [c1 (chan)
+      c2 (chan)]
+  (upload "playful.png" c1)
+  (let [[value channel] (alts!! [c1 [c2 "put!"]])]
+    (println value)
+    (= channel c1)))
+;; => playful.png
+;;    true
+
+
+(let [c1 (chan)
+      c2 (chan)]
+  (upload "playful.png" c1)
+  (go (<! c2))
+  (let [[value channel] (alts!! [c1 [c2 "put!"]])]
+    (println value)
+    (= channel c2)))
+;; => true
+;;    true
+
+
 
 
 (defn -main

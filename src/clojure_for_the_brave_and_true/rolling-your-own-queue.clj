@@ -18,6 +18,10 @@
      (Thread/sleep ~timeout)
      ~@body))
 
+(wait 1000 (println "Do") (println "Something....."))
+;; => Do
+;;    Something.....
+
 ;; split tasks into a concurrent portion and a serialized portion
 
 (let [saying3 (promise)]
@@ -39,4 +43,15 @@
 ;; Returning saying1 in a let block and dereferencing the let block ensures that you’ll be 
 ;; completely finished with saying1 before the code moves on to do anything to saying2
 
-;; enqueue implementation, more examples on @(let ...) - pending
+(time 
+(let [saying3 (promise)]
+  (future (deliver saying3 (wait 1000 "Cheerio!")))
+  (let [saying2 (promise)]
+     (future (deliver saying2 (wait 1000 "Pip Pip!")))
+     @(let [saying1 (promise)]
+        (future (deliver saying1 (wait 2000 "'Ello, gov'na!")))
+        (println @saying1)
+        saying1)
+    (println @saying2))
+  (println @saying3))
+)
