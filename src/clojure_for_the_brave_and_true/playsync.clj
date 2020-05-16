@@ -347,6 +347,67 @@
 ;;    true
 
 
+;; Rolling your own Queue - 2
+(defn append-to-file
+  [filename s]
+  (spit filename s :append true))
+
+(defn format-quote
+  [quote]
+  (str "=== BEGIN QUOTE ===\n" quote "=== END QUOTE ===\n\n"))
+
+(defn random-quote
+  []
+  (format-quote (slurp "https://www.braveclojure.com/random-quote")))
+
+(defn snag-quotes
+  [filename num-quotes]
+  (let [c (chan)]
+    (go (while true (append-to-file filename (<! c))))
+    (dotimes [n num-quotes]
+      (go (>! c (random-quote))))))
+;; Here, each quote-retrieving task is handled in the order that it finishes.
+
+(snag-quotes "quotes" 10)
+;; => nil
+
+;; Escape Callback Hell with Process Pipelines
+
+(defn upper-caser
+  [in]
+  (let [out (chan)]
+    (go (while true (>! out (clojure.string/upper-case (<! in)))))
+    out))
+
+(defn reverser
+  [in]
+  (let [out (chan)]
+    (go (while true (>! out (clojure.string/reverse (<! in)))))
+    out))
+
+(defn printer
+  [in]
+  (go (while true (println (<! in)))))
+
+(def in-chan (chan))
+(def upper-caser-out (upper-caser in-chan))
+(def reverser-out (reverser upper-caser-out))
+(printer reverser-out)
+
+(>!! in-chan "redrum")
+;; => MURDER
+
+(>!! in-chan "repaid")
+;; => DIAPER
+
+
+(let [in-c (chan)
+      rev-out (reverser in-c)
+      result (<!! rev-out)]
+  (>!! in-chan "Hello World")
+  (println result))
+;; blocked - fix it, come back later
+
 
 (defn -main
   "I don't do a whole lot ... yet."
