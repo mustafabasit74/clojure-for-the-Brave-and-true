@@ -1,18 +1,15 @@
-;; At this point, you might object that I’m just kicking the can down the road
-;; because we’re still left with the problem of how a function like first, rest, cons are able
-;; to work with different data structures. Clojure does this using two forms of indirection. 
-
 ;; ***
 ;; In programming, indirection is a generic term for the mechanisms
 ;; a language employs so that one name can have multiple, related meanings.
 
-;; In this case, the name first has multiple, data structure–specific meanings.
 ;; Indirection is what makes abstraction possible.
-;; Polymorphism is one way that Clojure provides indirection. I don’t want
-;; to get lost in the details, but basically, polymorphic functions dispatch to
-;; different function bodies based on the type of the argument supplied. (It’s
-;; not so different from how multiple-arity functions dispatch to different
-;; function bodies based on the number of arguments you provide.)
+;; Polymorphism is one way that Clojure provides indirection.
+
+
+;; In Clojure, an abstraction is a collection of operations, and 
+;; data types implement abstractions. For example, the seq abstraction consists of
+;; operations like first and rest, and the vector data type is an implementation of that abstraction; 
+;; it responds to all of the seq operations
 
 ;; When it comes to sequences, Clojure also creates indirection by doing a
 ;; kind of lightweight type conversion, producing a data structure that works
@@ -20,9 +17,6 @@
 ;; example, when you call map, first, rest, or cons — it calls the seq function
 ;; on the data structure in question to obtain a data structure that allows for
 ;; first, rest, and cons:
-
-;; Clojure has two constructs for defining polymorphic dispatch: the host platform’s
-;; interface construct and platform-independent protocols. - ???? 
 
 (map inc [1 2 3])
 (map inc '(1 2 3))
