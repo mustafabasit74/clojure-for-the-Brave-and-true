@@ -5,8 +5,8 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/core.async "1.2.603"]]
-  ;; :main ^:skip-aot clojure-for-the-brave-and-true.core
+     :main ^:skip-aot clojure-for-the-brave-and-true.core
   ;; :main ^:skip-aot clojure-for-the-brave-and-true.theDivineCheeseCode
-     :main ^:skip-aot clojure-for-the-brave-and-true.playsync
+  ;; :main ^:skip-aot clojure-for-the-brave-and-true.playsync
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

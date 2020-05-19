@@ -401,12 +401,11 @@
 ;; => DIAPER
 
 
-(let [in-c (chan)
-      rev-out (reverser in-c)
-      result (<!! rev-out)]
+(let [in-chan (chan)
+      rev-out (reverser in-chan)]
   (>!! in-chan "Hello World")
-  (println result))
-;; blocked - fix it, come back later
+  (println (<!! rev-out)))
+;; => dlroW olleH
 
 
 (defn -main
