@@ -1,3 +1,5 @@
+;; Interop refers to the ability to interact with native Java constructs within Clojure
+ 
 ;; (.methodName object)
 
 (.toUpperCase "Java Interop")
